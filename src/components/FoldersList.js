@@ -8,6 +8,13 @@ function FoldersList() {
   const [targetFolder, setTargetFolder] = useState(null);
   const [originalFolderName, setOriginalFolderName] = useState("");
   const [targetPoint, setTargetPoint] = useState({x:0, y:0});
+  const [selectedFolder, setSelectedFolder] = useState(null);
+
+  useEffect(()=>{
+    if(folders.length!==0){
+      selectFolder(document.querySelector(".folder"));
+    }
+  }, [])
 
   /******************* Generate a Unique Id for a Folder **********************/
   const uid = () =>
@@ -16,6 +23,15 @@ function FoldersList() {
         Math.random().toString(16)
     ).replace(/\./g, '')
 
+  /***************************** Select Folder ********************************/
+  const selectFolder = (element) => {
+    if(selectedFolder!=null){
+      selectedFolder.classList.remove("selected");
+    }
+
+    element.classList.add("selected");
+    setSelectedFolder(element);
+  }
 
   /********************************** Create Folder ***************************/
   const addNewFolder = () =>{
@@ -98,7 +114,7 @@ function FoldersList() {
     <div className='folderList'>
       <div className="folders">
         {folders && folders.map(folder => (
-          <div key={folder.id} onContextMenu={e => handleContextMenu(e)} onBlur={editFolderName}>
+          <div key={folder.id} onContextMenu={e => handleContextMenu(e)} onBlur={editFolderName} onClick={e=>selectFolder(e.target)}>
             <Folder folder={folder}/>
           </div>
         ))}

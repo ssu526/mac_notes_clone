@@ -36,13 +36,12 @@
 .folderList{
     width: 300px;
     height: 100%;
-    padding: 15px;
     background-color: rgb(236, 234, 234);
     position: relative;
 }
 
 .folder{
-    padding: 10px;
+    padding: 15px;
 }
 
 .addNewFolder{
@@ -56,6 +55,10 @@
     bottom: 0px;
     left: 0px;
     cursor: pointer;
+}
+
+.selected{
+    background-color: blanchedalmond;
 }
 
 /***** NOTE LIST *****/
