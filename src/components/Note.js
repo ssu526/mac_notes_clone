@@ -1,17 +1,13 @@
-import React, { useContext } from 'react'
-import { SelectedNoteContext } from '../context/SelectedNoteContext';
-
 export const Note = ({note}) => {
-    const {setSelected} = useContext(SelectedNoteContext);
+  const firstLineBreakIndex = note.body.indexOf("\n");
 
-    const handleSelectNote = ()=>{
-        setSelected(note);
-    }
+  let title = firstLineBreakIndex === -1 ? note.body.substring(0, 15) : note.body.substring(0, firstLineBreakIndex);
+  let preview = firstLineBreakIndex === -1 ? "": note.body.substring(firstLineBreakIndex)
 
   return (
-    <div className='note-snippet' onClick={()=>handleSelectNote(note)}>
-        <p className='note-title'>{note.title}</p>
-        <p className='note-preview'>{note.body.substring(0, 15)}</p>
+    <div className='note-snippet'>
+        <p className='note-title'>{title.length>15 ? title.substring(0,15)+"..." : title}</p>
+        <p className='note-preview'>{preview.length>15 ? preview.substring(0,15)+"..." : preview}</p>
     </div>
   )
 }

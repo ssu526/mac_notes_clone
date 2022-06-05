@@ -1,30 +1,61 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { SelectedNoteContext } from '../context/SelectedNoteContext';
+import { NoteContext } from '../context/NoteContext';
 
 function NoteDetail() {
-  const {selected} = useContext(SelectedNoteContext);
+  const {selectedNote, notes, setNotes, selectedNoteEl} = useContext(NoteContext);
+  const [noteDetail, setNoteDetail] = useState("");
 
   useEffect(()=>{
-    setNote(selected.body);
-  }, [selected])
-
-  const [note, setNote] = useState("");
+    setNoteDetail(selectedNote.body);
+  }, [selectedNote])
 
   const handleNoteChange = (e) => {
-    setNote(e.target.value);
-    saveNote(note);
+    let title=""
+    let preview="";
+
+    if(e.target.value.trim()===""){
+      setNoteDetail("");
+      title = ""
+      preview = "";
+
+    }else{
+      let input = e.target.value;
+      setNoteDetail(input);
+      const firstLineBreakIndex = input.indexOf("\n");
+      title = input.substring(0, firstLineBreakIndex);
+      title =firstLineBreakIndex === -1 ? input.substring(0, 15) : input.substring(0, firstLineBreakIndex);
+      preview = firstLineBreakIndex === -1 ? "": input.substring(firstLineBreakIndex)
+    }
+
+    selectedNoteEl.querySelector(".note-title").innerHTML = title.length>15 ? title.substring(0,15)+"..." : title;
+    selectedNoteEl.querySelector(".note-preview").innerHTML = preview.length>15 ? preview.substring(0,15)+"..." : preview;
   }
 
-  const saveNote = (note) => {
+  const saveNote = () => {
+    let noteId = selectedNote.id;
 
+    let newNotesList = notes.map(note => note.id===noteId ? 
+                                  {
+                                    id:note.id,
+                                    body:noteDetail.trim().length===0 ? "New Note":noteDetail,
+                                    folderId: note.folderId
+                                  }
+                                  :{
+                                    id:note.id,
+                                    body:note.body,
+                                    folderId: note.folderId
+                                  });
+    setNotes(newNotesList);
   }
 
 
   return (
     <div className='note-detail'>
-      <textarea value={note} onChange={e => handleNoteChange(e)}/>
+      <textarea value={noteDetail} onChange={e => handleNoteChange(e)} onBlur={saveNote}/>
     </div>
   )
 }
 
 export default NoteDetail
+
+

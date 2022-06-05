@@ -21,14 +21,35 @@
     padding: 5px;
     border-top-left-radius: 8x;
     border-top-right-radius: 8px;
-    height: 35px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menuButton{
+    border: none;
+    outline: none;
+    background-color: rgb(221, 218, 218);
+    width: 30px;
+    height: 30px;
+    font-size: 15px;
+    margin: 0px 10px;
+    color: gray;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.menuButton:hover{
+    color: black;
+    font-weight: bold;
 }
 
 /***** NOTE CONTAINER *****/
 
 .notes-container{
     display: flex;
-    height: calc(100% - 35px);
+    height: calc(100% - 38px);
     width: 100%;
 }
 
@@ -38,9 +59,11 @@
     height: 100%;
     background-color: rgb(236, 234, 234);
     position: relative;
+    overflow-y: auto;
 }
 
 .folder{
+    cursor: pointer;
     padding: 15px;
 }
 
@@ -55,6 +78,12 @@
     bottom: 0px;
     left: 0px;
     cursor: pointer;
+    font-size: 16px;
+    color: gray;
+}
+
+.addNewFolder i{
+    font-size: 20px;
 }
 
 .selected{
@@ -64,20 +93,28 @@
 /***** NOTE LIST *****/
 .notes-list{
     width: 300px;
-    padding: 15px;
     border: 1px solid rgb(236, 234, 234);
+    overflow-y: auto;
 }
 
-.note-snippet{
+.note-item{
+    cursor: pointer;
     padding: 10px;
-    border-bottom: 1px solid rgb(236, 234, 234);
 }
 
 .note-title{
     font-weight: bold;
-    height: 100%;
+    pointer-events: none;
 }
 
+.note-snippet{
+    border-bottom: 1px solid rgb(236, 234, 234);
+    pointer-events: none;
+}
+
+.selected-note{
+    background-color: blanchedalmond;
+}
 
 /***** NOTE *****/
 .note-detail{
