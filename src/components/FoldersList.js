@@ -7,7 +7,7 @@ function FoldersList() {
   const [targetFolder, setTargetFolder] = useState(null);
   const [originalFolderName, setOriginalFolderName] = useState("");
   const [targetPoint, setTargetPoint] = useState({x:0, y:0});
-  const {setSearchText, setSearchResult, folders, setFolders, selectedFolderEl, setSelectedFolderEl, setSelectedNote, setSelectedNoteEl, notes, setNotes, hideFolderSidebar} = useContext(NoteContext);
+  const {password, setSearchText, setSearchResult, folders, setFolders, selectedFolderEl, setSelectedFolderEl, setSelectedNote, setSelectedNoteEl, notes, setNotes, hideFolderSidebar} = useContext(NoteContext);
 
   // Select the first folder if there's one
   useEffect(()=>{
@@ -45,18 +45,31 @@ function FoldersList() {
   const deleteFolder = () => {
     let deletedFolderId = targetFolder.getAttribute("data-id");
     let selectedFolderId = selectedFolderEl.getAttribute("data-id");
+    let containsPasswordProtectedNotes = false;
 
-    if(deletedFolderId===selectedFolderId){
-      selectedFolderEl.classList.remove("selected");
-      setSelectedFolderEl(null);
-      setSelectedNote({});
-      setSelectedNoteEl(null);
+    for(let i=0;i<notes.length;i++){
+      if(notes[i].folderId===deletedFolderId && notes[i].passwordProtected){
+        containsPasswordProtectedNotes=true;
+        break;
+      }
     }
 
-    const newFoldersList = folders.filter(folder => folder.id!==deletedFolderId);
-    const newNotesList = notes.filter(note => note.folderId!==deletedFolderId);
-    setFolders(newFoldersList);
-    setNotes(newNotesList);
+    if(containsPasswordProtectedNotes){
+      let passwordInput = prompt("This folders contains password protected notes. Enter the notes password to delete the folder.");
+      if(passwordInput===password){
+        if(deletedFolderId===selectedFolderId){
+          selectedFolderEl.classList.remove("selected");
+          setSelectedFolderEl(null);
+          setSelectedNote({});
+          setSelectedNoteEl(null);
+        }
+    
+        const newFoldersList = folders.filter(folder => folder.id!==deletedFolderId);
+        const newNotesList = notes.filter(note => note.folderId!==deletedFolderId);
+        setFolders(newFoldersList);
+        setNotes(newNotesList);
+      }
+    }
   }
 
 /***************************** Context Menu *********************************/

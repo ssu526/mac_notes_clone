@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useState } from 'react'
 import { NoteContext } from '../context/NoteContext';
 
 function NoteDetail() {
-  const {selectedNote, selectedNoteEl, notes, setNotes} = useContext(NoteContext);
+  const {password, selectedNote, selectedNoteEl, notes, setNotes} = useContext(NoteContext);
   const [noteDetail, setNoteDetail] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
 
   useEffect(()=>{
     if(selectedNote===undefined || Object.keys(selectedNote).length===0){
@@ -38,27 +39,51 @@ function NoteDetail() {
     }
   }
 
-  const saveNote = (e) => {
+  const saveNote = () => {
     let noteId = selectedNote.id;
 
     let newNotesList = notes.map(note => note.id===noteId ? 
                                   {
                                     id:note.id,
-                                    body:noteDetail.trim().length===0 ? "New Note":noteDetail,
-                                    folderId: note.folderId
+                                    body:noteDetail.trim().length===0 ? "New Note" : noteDetail,
+                                    folderId: note.folderId,
+                                    passwordProtected: note.passwordProtected,
+                                    locked:note.locked
                                   }
-                                  :{
+                                  :
+                                  {
                                     id:note.id,
                                     body:note.body,
-                                    folderId: note.folderId
+                                    folderId: note.folderId,
+                                    passwordProtected: note.passwordProtected,
+                                    locked:note.locked
                                   });
     setNotes(newNotesList);
   }
 
+  const unlock = (e)=>{
+    if(e.key === "Enter"){
+      setPasswordInput("");
+      if(passwordInput===password){
+        selectedNote.locked=false;
+        saveNote();
+      }
+    }
+  }
 
   return (
     <div className='note-detail'>
-      <textarea value={noteDetail} onChange={e => handleNoteChange(e)} onBlur={saveNote}/>
+      {
+        Object.keys(selectedNote).length!==0 && selectedNote.locked!==false ?
+        <div>
+          <i className="fa-solid fa-lock"></i>
+          <p className='lock-message'>This note is locked.</p>
+          <p> Enter the notes password to view.</p>
+          <input placeholder='Enter password' onKeyDown={e=>unlock(e)} value={passwordInput} onChange={e=>setPasswordInput(e.target.value)}/>
+        </div>
+        :
+        <textarea value={noteDetail} onChange={e => handleNoteChange(e)} onBlur={saveNote}/>
+      }
     </div>
   )
 }
