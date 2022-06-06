@@ -3,7 +3,7 @@ import { Note } from './Note';
 import {NoteContext} from '../context/NoteContext'
 
 function NotesList() {
-  const {selectedFolderEl, notes, setNotes, selectedNote, setSelectedNote, selectedNoteEl, setSelectedNoteEl} = useContext(NoteContext);
+  const {selectedFolderEl, notes, selectedNote, setSelectedNote, selectedNoteEl, setSelectedNoteEl} = useContext(NoteContext);
   const [filterNotes, setFilterNotes] = useState([]);
 
   useEffect(()=>{
@@ -13,9 +13,13 @@ function NotesList() {
     }
   }, [selectedFolderEl, notes])
 
-  // set the first note as the selected note whenever there's a folder change/note change
+  // set the first note as the selected note whenever there's a folder change
   useEffect(()=>{
     if(selectedFolderEl!==null){
+      if(selectedNoteEl!==null) selectedNoteEl.classList.remove("selected-note");
+      setSelectedNote({});
+      setSelectedNoteEl(null);
+
       let selectedFolderId = selectedFolderEl.getAttribute("data-id"); 
 
       if(filterNotes.length!==0){
@@ -27,6 +31,10 @@ function NotesList() {
           if(selectedNoteEl!==null) selectedNoteEl.classList.remove("selected-note");
           firstNoteItemEl.classList.add("selected-note");
         }
+      }else{
+        if(selectedNoteEl!==null) selectedNoteEl.classList.remove("selected-note");
+        setSelectedNote({});
+        setSelectedNoteEl(null);
       }
     }
   }, [filterNotes])

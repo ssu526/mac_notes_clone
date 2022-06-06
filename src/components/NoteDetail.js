@@ -2,11 +2,16 @@ import React, { useContext, useEffect, useState } from 'react'
 import { NoteContext } from '../context/NoteContext';
 
 function NoteDetail() {
-  const {selectedNote, notes, setNotes, selectedNoteEl} = useContext(NoteContext);
+  const {selectedNote, selectedNoteEl, notes, setNotes} = useContext(NoteContext);
   const [noteDetail, setNoteDetail] = useState("");
 
   useEffect(()=>{
-    setNoteDetail(selectedNote.body);
+    if(selectedNote===undefined || Object.keys(selectedNote).length===0){
+      setNoteDetail("No note selected.");
+    }else{
+      setNoteDetail(selectedNote.body);
+    }
+    
   }, [selectedNote])
 
   const handleNoteChange = (e) => {

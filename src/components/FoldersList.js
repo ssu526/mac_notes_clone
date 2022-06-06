@@ -1,15 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useLocalStorage } from '../hooks/useLocalStorage.js';
 import { Folder } from './Folder';
 import { NoteContext } from '../context/NoteContext'
 
 function FoldersList() {
-  const[folders, setFolders] = useLocalStorage("folders", []);
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [targetFolder, setTargetFolder] = useState(null);
   const [originalFolderName, setOriginalFolderName] = useState("");
   const [targetPoint, setTargetPoint] = useState({x:0, y:0});
-  const {selectedFolderEl, setSelectedFolderEl, setSelectedNote, setSelectedNoteEl, notes, setNotes} = useContext(NoteContext);
+  const {folders, setFolders, selectedFolderEl, setSelectedFolderEl, setSelectedNote, setSelectedNoteEl, notes, setNotes} = useContext(NoteContext);
 
   // Select the first folder if there's one
   useEffect(()=>{
@@ -133,7 +131,7 @@ function FoldersList() {
 
       {showContextMenu && <ContextMenu point={targetPoint}/>}
 
-      <button className='addNewFolder' onClick={addNewFolder}><i class="fa-solid fa-circle-plus"></i> New Folder</button>
+      <button className='addNewFolder' onClick={addNewFolder}><i className="fa-solid fa-circle-plus"></i> New Folder</button>
     </div>
   )
 }

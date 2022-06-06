@@ -99,16 +99,22 @@
 
 .note-item{
     cursor: pointer;
-    padding: 10px;
+    border-bottom: 1px solid rgb(236, 234, 234);
+    height: 48px;
+    padding: 6px;
 }
 
 .note-title{
     font-weight: bold;
     pointer-events: none;
+    margin-bottom: 5px;
+}
+
+.note-preview{
+    color: gray;
 }
 
 .note-snippet{
-    border-bottom: 1px solid rgb(236, 234, 234);
     pointer-events: none;
 }
 
