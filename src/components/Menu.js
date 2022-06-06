@@ -2,8 +2,7 @@ import React, { useContext, useState} from 'react'
 import {NoteContext} from '../context/NoteContext'
 
 function Menu() {
-  const {setSearchResult, folders, setFolders, selectedFolderEl, notes, setNotes, selectedNote, setSelectedNote, setSelectedNoteEl, setHideFolderSidebar} = useContext(NoteContext);
-  const [searchText, setSearchText] = useState("");
+  const {searchText, setSearchText, setSearchResult, folders, setFolders, selectedFolderEl, notes, setNotes, selectedNote, setSelectedNote, setSelectedNoteEl, setHideFolderSidebar} = useContext(NoteContext);
 
   /*************************** ADD NEW NOTE ******************************/
   const addNewNote = () =>{
@@ -41,13 +40,9 @@ function Menu() {
   const searchNotes = (text) =>{
     setSearchText(text);
     let result = notes.filter(note => note.body.includes(text));
-    
-    if(text.length>0){
-      setSearchResult(result);
-    }else{
-      setSearchResult([]);
-    }
-
+    setSearchResult(result);
+    setSelectedNote({});
+    setSelectedNoteEl(null);
   }
 
   /*************************** HIDE FOLDER SIDE BAR ******************************/
@@ -68,7 +63,7 @@ function Menu() {
   return (
     <div className='menuBar'>
       <button className={`menuButton`} onClick={toggleFolderSidebar}><i className="fa-solid fa-table-list"></i></button>
-      <button className="menuButton" onClick={addNewNote}><i className="fa-solid fa-note-sticky"></i></button>
+      <button className="menuButton" onClick={addNewNote}>+<i className="fa-solid fa-note-sticky"></i></button>
       <button className="menuButton" onClick={deleteNote}><i className="fa-solid fa-trash-can"></i></button>
       {/* <button className="menuButton"><i className="fa-solid fa-lock"></i></button> */}
       <input className="search" type="text" placeholder='Search...' value={searchText} onChange={e=>searchNotes(e.target.value)}/>

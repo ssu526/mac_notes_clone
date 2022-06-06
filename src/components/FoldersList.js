@@ -7,7 +7,7 @@ function FoldersList() {
   const [targetFolder, setTargetFolder] = useState(null);
   const [originalFolderName, setOriginalFolderName] = useState("");
   const [targetPoint, setTargetPoint] = useState({x:0, y:0});
-  const {setSearchResult, folders, setFolders, selectedFolderEl, setSelectedFolderEl, setSelectedNote, setSelectedNoteEl, notes, setNotes, hideFolderSidebar} = useContext(NoteContext);
+  const {setSearchText, setSearchResult, folders, setFolders, selectedFolderEl, setSelectedFolderEl, setSelectedNote, setSelectedNoteEl, notes, setNotes, hideFolderSidebar} = useContext(NoteContext);
 
   // Select the first folder if there's one
   useEffect(()=>{
@@ -30,7 +30,8 @@ function FoldersList() {
     if(selectedFolderEl!==null) selectedFolderEl.classList.remove("selected");
     target.classList.add("selected");
     setSelectedFolderEl(target);
-    setSearchResult([])
+    setSearchResult([]);
+    setSearchText("");
   }
 
   /********************************** Create Folder ***************************/

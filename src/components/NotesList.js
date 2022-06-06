@@ -3,7 +3,7 @@ import { Note } from './Note';
 import {NoteContext} from '../context/NoteContext'
 
 function NotesList() {
-  const {searchResult, selectedFolderEl, notes, selectedNote, setSelectedNote, selectedNoteEl, setSelectedNoteEl} = useContext(NoteContext);
+  const {searchText, searchResult, selectedFolderEl, notes, selectedNote, setSelectedNote, selectedNoteEl, setSelectedNoteEl} = useContext(NoteContext);
   const [filterNotes, setFilterNotes] = useState([]);
 
   useEffect(()=>{
@@ -56,7 +56,7 @@ function NotesList() {
   return (
     <div className='notes-list'>
         {
-          searchResult.length>0 ? 
+          searchText.trim().length>0 ? 
           searchResult.map(note => (
             <div key={note.id} onClick={(e)=>handleSelectNote(note, e)} className="note-item">
               <Note note={note}/>
@@ -74,15 +74,3 @@ function NotesList() {
 }
 
 export default NotesList
-
-/*
-
-        {
-            filterNotes && filterNotes.map(note => (
-              <div key={note.id} onClick={(e)=>handleSelectNote(note, e)} className="note-item">
-                <Note note={note}/>
-              </div>
-            ))
-        }
-
-*/

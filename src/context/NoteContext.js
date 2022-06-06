@@ -11,6 +11,7 @@ function NoteContextProvider(props){
     const [folders, setFolders] = useLocalStorage("folders", []);
     const [hideFolderSidebar, setHideFolderSidebar] = useState("");
     const [searchResult, setSearchResult] = useState([]);
+    const [searchText, setSearchText] = useState("");
 
     return(
         <NoteContext.Provider value={{selectedNote, 
@@ -26,7 +27,9 @@ function NoteContextProvider(props){
                                       hideFolderSidebar,
                                       setHideFolderSidebar,
                                       searchResult,
-                                      setSearchResult}}>
+                                      setSearchResult,
+                                      searchText,
+                                      setSearchText}}>
             {props.children}
         </NoteContext.Provider>
     )

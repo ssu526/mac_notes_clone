@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { NoteContext } from '../context/NoteContext';
 
 function NoteDetail() {
-  const {selectedNote, setSelectedNote, selectedNoteEl, setSelectedNoteEl, notes, setNotes} = useContext(NoteContext);
+  const {selectedNote, selectedNoteEl, notes, setNotes} = useContext(NoteContext);
   const [noteDetail, setNoteDetail] = useState("");
 
   useEffect(()=>{
