@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { NoteContext } from '../context/NoteContext';
 
 function NoteDetail() {
-  const {selectedNote, selectedNoteEl, notes, setNotes} = useContext(NoteContext);
+  const {selectedNote, setSelectedNote, selectedNoteEl, setSelectedNoteEl, notes, setNotes} = useContext(NoteContext);
   const [noteDetail, setNoteDetail] = useState("");
 
   useEffect(()=>{
@@ -15,28 +15,30 @@ function NoteDetail() {
   }, [selectedNote])
 
   const handleNoteChange = (e) => {
-    let title=""
-    let preview="";
-
-    if(e.target.value.trim()===""){
-      setNoteDetail("");
-      title = ""
-      preview = "";
-
-    }else{
-      let input = e.target.value;
-      setNoteDetail(input);
-      const firstLineBreakIndex = input.indexOf("\n");
-      title = input.substring(0, firstLineBreakIndex);
-      title =firstLineBreakIndex === -1 ? input.substring(0, 15) : input.substring(0, firstLineBreakIndex);
-      preview = firstLineBreakIndex === -1 ? "": input.substring(firstLineBreakIndex)
+    if(selectedNoteEl!==null){
+      let title=""
+      let preview="";
+  
+      if(e.target.value.trim()===""){
+        setNoteDetail("");
+        title = ""
+        preview = "";
+  
+      }else{
+        let input = e.target.value;
+        setNoteDetail(input);
+        const firstLineBreakIndex = input.indexOf("\n");
+        title = input.substring(0, firstLineBreakIndex);
+        title =firstLineBreakIndex === -1 ? input.substring(0, 15) : input.substring(0, firstLineBreakIndex);
+        preview = firstLineBreakIndex === -1 ? "": input.substring(firstLineBreakIndex)
+      }
+  
+      selectedNoteEl.querySelector(".note-title").innerHTML = title.length>15 ? title.substring(0,15)+"..." : title;
+      selectedNoteEl.querySelector(".note-preview").innerHTML = preview.length>15 ? preview.substring(0,15)+"..." : preview;
     }
-
-    selectedNoteEl.querySelector(".note-title").innerHTML = title.length>15 ? title.substring(0,15)+"..." : title;
-    selectedNoteEl.querySelector(".note-preview").innerHTML = preview.length>15 ? preview.substring(0,15)+"..." : preview;
   }
 
-  const saveNote = () => {
+  const saveNote = (e) => {
     let noteId = selectedNote.id;
 
     let newNotesList = notes.map(note => note.id===noteId ? 

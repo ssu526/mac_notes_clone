@@ -1,13 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;400&family=Press+Start+2P&family=Roboto:wght@100;400&display=swap');
+
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
 .App{
     width: 1000px;
     height: 700px;
-    border-radius: 8px;
+    border-radius: 5px;
     border: 1px solid rgb(236, 234, 234);;
     margin: auto;
     margin-top: 20px;
@@ -17,20 +20,21 @@
 
 /***** MENU BAR *****/
 .menuBar{
-    background-color: rgb(206, 203, 203);
+    background-color: rgb(219, 215, 215);
     padding: 5px;
-    border-top-left-radius: 8x;
-    border-top-right-radius: 8px;
     height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-top-left-radius: 5x;
+    border-top-right-radius: 5px;
+    position: relative;
 }
 
 .menuButton{
     border: none;
     outline: none;
-    background-color: rgb(221, 218, 218);
+    background-color: rgb(241, 235, 235);
     width: 30px;
     height: 30px;
     font-size: 15px;
@@ -45,30 +49,44 @@
     font-weight: bold;
 }
 
+.search{
+    padding: 2px 3px;
+    position: absolute;
+    right: 0;
+    margin-right: 20px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: rgba(241, 241, 241, 0.25) 0px 30px 60px -12px inset, rgba(114, 113, 113, 0.3) 0px 18px 36px -18px inset;
+}
+
 /***** NOTE CONTAINER *****/
 
 .notes-container{
     display: flex;
     height: calc(100% - 38px);
     width: 100%;
+    border-radius: 5px;
 }
 
 /***** FOLDERS *****/
 .folderList{
     width: 300px;
     height: 100%;
-    background-color: rgb(236, 234, 234);
+    background-color: rgb(223, 219, 219);
     position: relative;
     overflow-y: auto;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
 }
 
 .folder{
     cursor: pointer;
+    height: 60px;
     padding: 15px;
 }
 
 .addNewFolder{
-    background-color: rgb(236, 234, 234);
+    background-color: rgb(223, 219, 219);
     width: 100%;
     padding: 10px;
     margin-top: 10px;
@@ -90,6 +108,10 @@
     background-color: blanchedalmond;
 }
 
+.hideFolderSidebar{
+    display: none;
+}
+
 /***** NOTE LIST *****/
 .notes-list{
     width: 300px;
@@ -100,18 +122,18 @@
 .note-item{
     cursor: pointer;
     border-bottom: 1px solid rgb(236, 234, 234);
-    height: 48px;
+    height: 60px;
     padding: 6px;
 }
 
 .note-title{
     font-weight: bold;
     pointer-events: none;
-    margin-bottom: 5px;
 }
 
 .note-preview{
     color: gray;
+    font-size: 15px;
 }
 
 .note-snippet{
@@ -119,7 +141,7 @@
 }
 
 .selected-note{
-    background-color: blanchedalmond;
+    background-color: rgb(253, 246, 236);
 }
 
 /***** NOTE *****/
@@ -138,16 +160,14 @@
 }
 
 
-/***** NOTE DETAIL *****/
-
-
 /***** Context Menu *****/
 .context-menu{
-    border-radius: 4px;
-    padding: 10px;
+    border-radius: 5px;
+    padding: 5px 10px;
     position: absolute;
-    width: 150px;
     top:0;
     left:0;
-    background-color: rgb(204, 202, 200);
+    font-size: 15px;
+    background-color: rgb(241, 235, 235);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }

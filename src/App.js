@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import './App.css';
 import FoldersList from './components/FoldersList';
 import Menu from './components/Menu';

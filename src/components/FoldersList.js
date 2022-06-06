@@ -7,7 +7,7 @@ function FoldersList() {
   const [targetFolder, setTargetFolder] = useState(null);
   const [originalFolderName, setOriginalFolderName] = useState("");
   const [targetPoint, setTargetPoint] = useState({x:0, y:0});
-  const {folders, setFolders, selectedFolderEl, setSelectedFolderEl, setSelectedNote, setSelectedNoteEl, notes, setNotes} = useContext(NoteContext);
+  const {setSearchResult, folders, setFolders, selectedFolderEl, setSelectedFolderEl, setSelectedNote, setSelectedNoteEl, notes, setNotes, hideFolderSidebar} = useContext(NoteContext);
 
   // Select the first folder if there's one
   useEffect(()=>{
@@ -30,25 +30,31 @@ function FoldersList() {
     if(selectedFolderEl!==null) selectedFolderEl.classList.remove("selected");
     target.classList.add("selected");
     setSelectedFolderEl(target);
+    setSearchResult([])
   }
 
   /********************************** Create Folder ***************************/
   const addNewFolder = () =>{
-    const newFolder = {id:uid(), name:"New Folder", noteCount:0};
+    const newFolder = {id:uid(), name:"New Folder"};
     let newFoldersList = [...folders, newFolder];
     setFolders(newFoldersList);
   }
 
   /***************************** Delete Folder ********************************/
   const deleteFolder = () => {
-    let folderId = targetFolder.getAttribute("data-id");
+    let deletedFolderId = targetFolder.getAttribute("data-id");
+    let selectedFolderId = selectedFolderEl.getAttribute("data-id");
+
+    if(deletedFolderId===selectedFolderId){
+      selectedFolderEl.classList.remove("selected");
+    }
+
+    const newFoldersList = folders.filter(folder => folder.id!==deletedFolderId);
+    const newNotesList = notes.filter(note => note.folderId!==deletedFolderId);
 
     setSelectedFolderEl(null);
     setSelectedNote({});
     setSelectedNoteEl(null);
-
-    const newFoldersList = folders.filter(folder => folder.id!==folderId);
-    const newNotesList = notes.filter(note => note.folderId!==folderId);
     setFolders(newFoldersList);
     setNotes(newNotesList);
   }
@@ -62,18 +68,20 @@ function FoldersList() {
 
   const handleContextMenu = (e) => {
     e.preventDefault();
-    const x = e.target.getBoundingClientRect().left;
-    const y = e.target.getBoundingClientRect().top;
+    const x = e.pageX;
+    const y = e.pageY;
+
     setShowContextMenu(true);
-    setTargetPoint({x,y});
+    setTargetPoint({x, y});
     setTargetFolder(e.target);
   }
   
-  const ContextMenu = ({point}) => {
-    const x = point.x + 60;
-    const y = point.y - 35;
+  const ContextMenu = () => {
+    const x = targetPoint.x;
+    const y = targetPoint.y
+
       return (
-        <div className='context-menu' style={{top:y, left:x}}>
+        <div className='context-menu' style={{top:y, left:x, position:"fixed"}}>
           <p onClick={makeFolderNameEditable}>Rename Folder</p>
           <p onClick={deleteFolder}>Delete Folder</p>
         </div>
@@ -115,10 +123,9 @@ function FoldersList() {
     setTargetFolder(null);
   }
   
-
 /***************************************************************************/
   return (
-    <div className='folderList'>
+    <div className={`${hideFolderSidebar} folderList`}>
       <div className="folders">
         {folders && folders.map(folder => (
 
