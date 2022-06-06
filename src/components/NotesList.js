@@ -7,23 +7,30 @@ function NotesList() {
   const [filterNotes, setFilterNotes] = useState([]);
 
   useEffect(()=>{
+    /*
+      If a folder is selected, then the notes list will be filtered with the folder id.
+      If no folder is selected, then the notes list will be empty.
+    */
     if(selectedFolderEl!==null){
       let selectedFolderId = selectedFolderEl.getAttribute("data-id"); 
       setFilterNotes(notes.filter(note => note.folderId===selectedFolderId));
+    }else{
+      setFilterNotes([])
     }
   }, [selectedFolderEl, notes])
 
-  // set the first note as the selected note whenever there's a folder change
+
   useEffect(()=>{
-    if(selectedFolderEl!==null){
-      if(selectedNoteEl!==null) selectedNoteEl.classList.remove("selected-note");
-      setSelectedNote({});
-      setSelectedNoteEl(null);
+      if(filterNotes.length===0){
+        // If filert notes list is empty, then there's not notes to select from.
+        setSelectedNote({});
+        setSelectedNoteEl(null);
+      }else{
+        let selectedFolderId = selectedFolderEl.getAttribute("data-id"); 
 
-      let selectedFolderId = selectedFolderEl.getAttribute("data-id"); 
-
-      if(filterNotes.length!==0){
+        // Make the first note as the selected note if user switch to another folder
         if(selectedNote.folderId!==selectedFolderId){
+          if(selectedNoteEl!==null) selectedNoteEl.classList.remove("selected-note");
           let firstNote = filterNotes[0];
           let firstNoteItemEl = document.querySelector(".note-item");
           setSelectedNote(firstNote);
@@ -31,12 +38,7 @@ function NotesList() {
           if(selectedNoteEl!==null) selectedNoteEl.classList.remove("selected-note");
           firstNoteItemEl.classList.add("selected-note");
         }
-      }else{
-        if(selectedNoteEl!==null) selectedNoteEl.classList.remove("selected-note");
-        setSelectedNote({});
-        setSelectedNoteEl(null);
       }
-    }
   }, [filterNotes])
 
 

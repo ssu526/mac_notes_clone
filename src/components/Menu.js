@@ -17,13 +17,6 @@ function Menu() {
   
       let newNotesList = [...notes, newNote];
       setNotes(newNotesList);
-
-      let newFoldersList = folders.map(folder => folder.id===selectedFolderId ? 
-                                                {id:folder.id, name:folder.name, noteCount:folder.noteCount+1}
-                                                :{id:folder.id, name:folder.name, noteCount:folder.noteCount})
-      
-      setFolders(newFoldersList);
-
     }
   }
 
