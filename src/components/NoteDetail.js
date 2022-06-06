@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { NoteContext } from '../context/NoteContext';
+import bcryptjs from 'bcryptjs';
 
 function NoteDetail() {
   const {password, selectedNote, selectedNoteEl, notes, setNotes} = useContext(NoteContext);
@@ -64,10 +65,14 @@ function NoteDetail() {
   const unlock = (e)=>{
     if(e.key === "Enter"){
       setPasswordInput("");
-      if(passwordInput===password){
-        selectedNote.locked=false;
-        saveNote();
-      }
+
+      bcryptjs.compare(passwordInput, password, function(err, res){
+        if(res===true){
+          selectedNote.locked=false;
+          saveNote();
+        }
+      })
+      
     }
   }
 

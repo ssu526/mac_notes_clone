@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Folder } from './Folder';
 import { NoteContext } from '../context/NoteContext'
+import bcryptjs from 'bcryptjs';
 
 function FoldersList() {
   const [showContextMenu, setShowContextMenu] = useState(false);
@@ -56,19 +57,22 @@ function FoldersList() {
 
     if(containsPasswordProtectedNotes){
       let passwordInput = prompt("This folders contains password protected notes. Enter the notes password to delete the folder.");
-      if(passwordInput===password){
-        if(deletedFolderId===selectedFolderId){
-          selectedFolderEl.classList.remove("selected");
-          setSelectedFolderEl(null);
-          setSelectedNote({});
-          setSelectedNoteEl(null);
+
+      bcryptjs.compare(passwordInput, password, function(err, res){
+        if(res===true){
+          if(deletedFolderId===selectedFolderId){
+            selectedFolderEl.classList.remove("selected");
+            setSelectedFolderEl(null);
+            setSelectedNote({});
+            setSelectedNoteEl(null);
+          }
+      
+          const newFoldersList = folders.filter(folder => folder.id!==deletedFolderId);
+          const newNotesList = notes.filter(note => note.folderId!==deletedFolderId);
+          setFolders(newFoldersList);
+          setNotes(newNotesList);
         }
-    
-        const newFoldersList = folders.filter(folder => folder.id!==deletedFolderId);
-        const newNotesList = notes.filter(note => note.folderId!==deletedFolderId);
-        setFolders(newFoldersList);
-        setNotes(newNotesList);
-      }
+      })
     }
   }
 

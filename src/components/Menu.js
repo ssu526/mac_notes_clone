@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import {NoteContext} from '../context/NoteContext'
 import ReactTooltip from 'react-tooltip'
+import bcryptjs from 'bcryptjs';
 
 function Menu() {
   const {password, setPassword, searchText, setSearchText, setSearchResult, selectedFolderEl, notes, setNotes, selectedNote, setSelectedNote, setSelectedNoteEl, setHideFolderSidebar} = useContext(NoteContext);
@@ -31,12 +32,15 @@ function Menu() {
   const deleteNote = () => {
     if(selectedNote.locked){
       let passwordInput = prompt("This note is locked. Please enter the notes password to delete the note.");
-      if(passwordInput===password){
-        const newNotesList = notes.filter(n => n.id!==selectedNote.id);
-        setNotes(newNotesList);
-        setSelectedNote({})
-        setSelectedNoteEl(null);
-      }
+
+      bcryptjs.compare(passwordInput, password, function(err, res){
+        if(res===true){
+          const newNotesList = notes.filter(n => n.id!==selectedNote.id);
+          setNotes(newNotesList);
+          setSelectedNote({})
+          setSelectedNoteEl(null);
+        }
+      })
     }else{
       const newNotesList = notes.filter(n => n.id!==selectedNote.id);
       setNotes(newNotesList);
@@ -77,15 +81,19 @@ function Menu() {
     if(Object.keys(selectedNote).length!==0){
       if(selectedNote.locked){
         let passwordInput = prompt("This note is locked. Enter the notes password to remove the lock.");
-        if(passwordInput===password){
-          selectedNote.passwordProtected=false;
-          selectedNote.locked=false;
-        }
+
+        bcryptjs.compare(passwordInput, password, function(err, res){
+          if(res===true){
+            selectedNote.passwordProtected=false;
+            selectedNote.locked=false;
+            saveNote(selectedNote.locked, selectedNote.passwordProtected);
+          }
+        })
       }else{
         selectedNote.passwordProtected=false;
         selectedNote.locked=false;
+        saveNote(selectedNote.locked, selectedNote.passwordProtected);
       }
-      saveNote(selectedNote.locked, selectedNote.passwordProtected);
     }
   }
 
@@ -97,11 +105,29 @@ function Menu() {
   }
 
   const updatePassword = () =>{
-    if(oldPassword===password){
-      setPassword(newPassword);
-      setOldPassword("");
-      setNewPassword("");
-      setShowUpdatePassword("hideChangePassword");
+    if(password.length===""){
+      bcryptjs.genSalt(10, function(err, salt) {
+        bcryptjs.hash(newPassword, salt, function(err, hash) {
+            setPassword(hash);
+            setOldPassword("");
+            setNewPassword("");
+            setShowUpdatePassword("hideChangePassword");
+        });
+      });
+    }else{
+      bcryptjs.compare(oldPassword, password, function(err, res) {
+        if(res===true){
+          console.log(res)
+          bcryptjs.genSalt(10, function(err, salt) {
+            bcryptjs.hash(newPassword, salt, function(err, hash) {
+                setPassword(hash);
+                setOldPassword("");
+                setNewPassword("");
+                setShowUpdatePassword("hideChangePassword");
+            });
+          });
+        }
+      });
     }
   }
 

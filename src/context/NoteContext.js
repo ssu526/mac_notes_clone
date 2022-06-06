@@ -12,7 +12,7 @@ function NoteContextProvider(props){
     const [searchResult, setSearchResult] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [folders, setFolders] = useLocalStorage("folders", []);
-    const [password, setPassword] = useLocalStorage("notes-password", "1111");
+    const [password, setPassword] = useLocalStorage("notes-password", "");
 
     return(
         <NoteContext.Provider value={{selectedNote, 
@@ -32,7 +32,8 @@ function NoteContextProvider(props){
                                       searchText,
                                       setSearchText,
                                       password,
-                                      setPassword}}>
+                                      setPassword,
+                                      }}>
             {props.children}
         </NoteContext.Provider>
     )
