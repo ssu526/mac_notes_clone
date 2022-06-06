@@ -48,14 +48,13 @@ function FoldersList() {
 
     if(deletedFolderId===selectedFolderId){
       selectedFolderEl.classList.remove("selected");
+      setSelectedFolderEl(null);
+      setSelectedNote({});
+      setSelectedNoteEl(null);
     }
 
     const newFoldersList = folders.filter(folder => folder.id!==deletedFolderId);
     const newNotesList = notes.filter(note => note.folderId!==deletedFolderId);
-
-    setSelectedFolderEl(null);
-    setSelectedNote({});
-    setSelectedNoteEl(null);
     setFolders(newFoldersList);
     setNotes(newNotesList);
   }
