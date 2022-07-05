@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import './App.css';
 import FoldersList from './components/FoldersList';
 import Menu from './components/Menu';
@@ -11,11 +10,11 @@ function App() {
     <div className="App">
       <NoteContextProvider>
       <Menu/>
-        <div className='notes-container'>
-          <FoldersList/>
-          <NotesList/>
-          <NoteDetail/>
-        </div>
+      <div className='notes-container'>
+        <FoldersList/>
+        <NotesList/>
+        <NoteDetail/>
+      </div>
       </NoteContextProvider>
     </div>
   );

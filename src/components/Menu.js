@@ -9,6 +9,8 @@ function Menu() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [tooltip, showTooltip] = useState(true);
+  const [errorWrongOldPassword, setErrorWrongOldPassword] = useState("");
+  const [errorEmptyNewPassword, setErrorEmptyNewPassword] = useState("");
 
   /*************************** ADD NEW NOTE ******************************/
   const addNewNote = () =>{
@@ -68,8 +70,9 @@ function Menu() {
   const lockNote = () => {
     if(Object.keys(selectedNote).length!==0){
       if(selectedNote.passwordProtected===true){
-        selectedNote.locked=true;
+        selectedNote.locked=true;  // If the note is already password protected
       }else{
+        selectedNote.locked=true;
         selectedNote.passwordProtected=true;
       }
       saveNote(selectedNote.locked, selectedNote.passwordProtected);
@@ -102,33 +105,55 @@ function Menu() {
     setShowUpdatePassword(prev=>prev==="" ? "hideChangePassword":"");
     setOldPassword("");
     setNewPassword("");
+    setErrorEmptyNewPassword("");
+    setErrorWrongOldPassword("");
   }
 
   const updatePassword = () =>{
-    if(password.length===""){
+    console.log(password)
+    if(password.trim()===""){
       bcryptjs.genSalt(10, function(err, salt) {
-        bcryptjs.hash(newPassword, salt, function(err, hash) {
-            setPassword(hash);
-            setOldPassword("");
-            setNewPassword("");
-            setShowUpdatePassword("hideChangePassword");
-        });
+          if(newPassword.trim()!==""){
+            bcryptjs.hash(newPassword, salt, function(err, hash) {
+              setPassword(hash);
+              setOldPassword("");
+              setNewPassword("");
+              setShowUpdatePassword("hideChangePassword");
+            })
+          }else{
+            setErrorEmptyNewPassword("error-empty-new-password");
+          }
       });
     }else{
       bcryptjs.compare(oldPassword, password, function(err, res) {
         if(res===true){
-          console.log(res)
           bcryptjs.genSalt(10, function(err, salt) {
-            bcryptjs.hash(newPassword, salt, function(err, hash) {
-                setPassword(hash);
-                setOldPassword("");
-                setNewPassword("");
-                setShowUpdatePassword("hideChangePassword");
-            });
+            if(newPassword.trim()!==""){
+                bcryptjs.hash(newPassword, salt, function(err, hash) {
+                  setPassword(hash);
+                  setOldPassword("");
+                  setNewPassword("");
+                  setShowUpdatePassword("hideChangePassword");
+                });
+            }else{
+              setErrorEmptyNewPassword("error-empty-new-password");
+            }
           });
+        }else{
+          setErrorWrongOldPassword("error-wrong-old-password");
         }
       });
     }
+  }
+
+  const handleOldPasswordInput = (e)=>{
+    setOldPassword(e.target.value);
+    setErrorWrongOldPassword("");
+  }
+
+  const handleNewPasswordInput = (e) =>{
+    setNewPassword(e.target.value);
+    setErrorEmptyNewPassword("");
   }
 
  /****************************** SAVE NOTE ******************************/
@@ -195,7 +220,7 @@ function Menu() {
             +<i className="fa-solid fa-note-sticky"></i>
           </button>
 
-
+          {/* Menu button: Delete note */}
           <button 
             className="menuButton" 
             onClick={deleteNote}
@@ -208,12 +233,11 @@ function Menu() {
             <i className="fa-solid fa-trash-can"></i>
           </button>
 
-
-
+          {/* Menu button: Lock note */}
           <button 
             className="menuButton" 
             onClick={lockNote}
-            data-tip={selectedNote.locked===true ? "Lock note":"Unlock note"}
+            data-tip={selectedNote.locked===true ? "Enter password to unlock":"Lock the note"}
             onMouseEnter={() => showTooltip(true)}
             onMouseLeave={() => {
               showTooltip(false);
@@ -224,6 +248,7 @@ function Menu() {
             }
           </button>
 
+          {/* Menu button: Remove lock*/}
           <button 
             className="menuButton" 
             onClick={removeLock}
@@ -236,12 +261,11 @@ function Menu() {
             <i  className="fa-solid fa-unlock-keyhole"></i>
           </button>
 
-
-
+          {/* Menu button: Change password */}
           <button 
             className="menuButton" 
             onClick={showChangePassword}
-            data-tip="Change notes password"
+            data-tip="Change password"
             onMouseEnter={() => showTooltip(true)}
             onMouseLeave={() => {
               showTooltip(false);
@@ -250,15 +274,21 @@ function Menu() {
             <i  className="fa fa-key"></i>
           </button>
 
+          {/* Search notes */}
           <input className="search" type="text" placeholder='Search...' value={searchText} onChange={e=>searchNotes(e.target.value)}/>
       </div>
       
+      {/* Change password */}
       <div className={`change-password-container ${showUpdatePassword}`}>
-        <label>Enter your old password(default: 1111):</label>
-        <input type="text" placeholder="Old Password" value={oldPassword} onChange={e=>setOldPassword(e.target.value)}/>
-        <label>Enter your new password</label>
-        <input type="text" placeholder="New Password" value={newPassword} onChange={e=>setNewPassword(e.target.value)}/>
-        <button className='savePasswordBtn' onClick={updatePassword}>Save</button>
+        <div className='change-password'>
+          <label>Enter your old password(default: 1111):</label>
+          <input type="text" placeholder="Old Password" value={oldPassword} onChange={e=>handleOldPasswordInput(e)}/>
+          <label>Enter your new password</label>
+          <input type="text" placeholder="New Password" value={newPassword} onChange={e=>handleNewPasswordInput(e)}/>
+          <button className='savePasswordBtn' onClick={updatePassword}>Save</button>
+        </div>
+        <p className={`password-error ${errorWrongOldPassword}`}>Old password does not match.</p>
+        <p className={`password-error ${errorEmptyNewPassword}`}>Please enter a new password.</p>
       </div>
     </div>
   )
