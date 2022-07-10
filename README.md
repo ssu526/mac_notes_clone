@@ -11,7 +11,7 @@ https://www.youtube.com/watch?v=_2wV-1hZxA0
 
 
 
-## Install
+## Installation
 ```
 # Download or clone the repo
 
