@@ -71,9 +71,15 @@ function FoldersList() {
           const newNotesList = notes.filter(note => note.folderId!==deletedFolderId);
           setFolders(newFoldersList);
           setNotes(newNotesList);
+          return;
         }
       })
     }
+
+    const newFoldersList = folders.filter(folder => folder.id!==deletedFolderId);
+    const newNotesList = notes.filter(note => note.folderId!==deletedFolderId);
+    setFolders(newFoldersList);
+    setNotes(newNotesList);
   }
 
 /***************************** Context Menu *********************************/
