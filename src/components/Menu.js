@@ -54,7 +54,7 @@ function Menu() {
   /*************************** SEARCH NOTES ******************************/
   const searchNotes = (text) =>{
     setSearchText(text);
-    let result = notes.filter(note => note.body.includes(text));
+    let result = notes.filter(note => note.body.trim().toLowerCase().includes(text.trim().toLowerCase()));
     setSearchResult(result);
     setSelectedNote({});
     setSelectedNoteEl(null);
@@ -110,20 +110,23 @@ function Menu() {
   }
 
   const updatePassword = () =>{
-    console.log(password)
     if(password.trim()===""){
-      bcryptjs.genSalt(10, function(err, salt) {
+      if(oldPassword==="1111"){
+        bcryptjs.genSalt(10, function(err, salt) {
           if(newPassword.trim()!==""){
-            bcryptjs.hash(newPassword, salt, function(err, hash) {
-              setPassword(hash);
-              setOldPassword("");
-              setNewPassword("");
-              setShowUpdatePassword("hideChangePassword");
-            })
+              bcryptjs.hash(newPassword, salt, function(err, hash) {
+                setPassword(hash);
+                setOldPassword("");
+                setNewPassword("");
+                setShowUpdatePassword("hideChangePassword");
+              });
           }else{
             setErrorEmptyNewPassword("error-empty-new-password");
           }
-      });
+        });
+      }else{
+        setErrorWrongOldPassword("error-wrong-old-password");
+      }
     }else{
       bcryptjs.compare(oldPassword, password, function(err, res) {
         if(res===true){
@@ -144,6 +147,41 @@ function Menu() {
         }
       });
     }
+
+
+    // if(password.trim()===""){
+    //   bcryptjs.genSalt(10, function(err, salt) {
+    //       if(newPassword.trim()!==""){
+    //         bcryptjs.hash(newPassword, salt, function(err, hash) {
+    //           setPassword(hash);
+    //           setOldPassword("");
+    //           setNewPassword("");
+    //           setShowUpdatePassword("hideChangePassword");
+    //         })
+    //       }else{
+    //         setErrorEmptyNewPassword("error-empty-new-password");
+    //       }
+    //   });
+    // }else{
+    //   bcryptjs.compare(oldPassword, password, function(err, res) {
+    //     if(res===true){
+    //       bcryptjs.genSalt(10, function(err, salt) {
+    //         if(newPassword.trim()!==""){
+    //             bcryptjs.hash(newPassword, salt, function(err, hash) {
+    //               setPassword(hash);
+    //               setOldPassword("");
+    //               setNewPassword("");
+    //               setShowUpdatePassword("hideChangePassword");
+    //             });
+    //         }else{
+    //           setErrorEmptyNewPassword("error-empty-new-password");
+    //         }
+    //       });
+    //     }else{
+    //       setErrorWrongOldPassword("error-wrong-old-password");
+    //     }
+    //   });
+    // }
   }
 
   const handleOldPasswordInput = (e)=>{
