@@ -10,10 +10,20 @@ Notes is a notetaking app developed by Apple.
 https://www.youtube.com/watch?v=_2wV-1hZxA0
 
 
+
 ## Install
 ```
+# Download or clone the repo
+
 # Install dependencies
 npm install
+
+
+# Run
+npm start
 ```
+
+## More
+This project is just for practice. All the notes and password are stored in local storage.
 
 
